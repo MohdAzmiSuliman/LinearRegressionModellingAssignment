@@ -1,0 +1,68 @@
+---
+title: "Linear Regression Modelling Assignment"
+author: "Mohd Azmi"
+date: "22/10/2019"
+output: html_document
+---
+
+# Pre-amble
+
+## Loading Library
+
+```{r Loading Library}
+library(foreign)
+library(tidyverse)
+library(corrplot)
+library(knitr)
+library(broom)
+library(MASS)
+library(tidyr)
+library(psych)
+```
+
+
+## Loading Dataset
+
+```{r}
+Data01 <- read.spss("weights.sav", use.value.label=T, to.data.frame=T)
+summary(Data01)
+```
+
+# Modelling
+
+## Descriptive
+
+```{r}
+summary(Data01)
+Data01 %>% describe()
+```
+
+## Data Exploration
+
+Histogram
+
+```{r Explore Weight}
+ggplot(Data01, aes(weight)) + geom_histogram()
+ggplot(Data01, aes(length)) + geom_histogram()
+ggplot(Data01, aes(headc)) + geom_histogram()
+```
+
+correlation and Correlogram
+
+```{r}
+Data02 <- Data01 %>% 
+  select_if(is.numeric)
+CorData02 <- cor(Data02, use = "complete.obs", method = "pearson")
+head(round(CorData02,2))
+corrplot(CorData02, method = "circle")
+```
+
+## Univariate
+
+```{r}
+
+ModelWeight01 <- lm(headc ~ weight, data = Data01)
+summary(ModelWeight01)
+
+```
+
