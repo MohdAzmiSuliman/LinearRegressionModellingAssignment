@@ -2,14 +2,18 @@
 title: "Linear Regression Modelling Assignment"
 author: "Mohd Azmi"
 date: "22/10/2019"
-output: html_document
+output:
+  rmdformats::material:
+    highlight: haddock
+resource_files:
+- AzmiLRAssignment.html
 ---
 
 # Pre-amble
 
 ## Loading Library
 
-```{r Loading Library}
+```{r Loading Library, echo=FALSE}
 library(foreign)
 library(tidyverse)
 library(corrplot)
@@ -17,6 +21,7 @@ library(knitr)
 library(broom)
 library(tidyr)
 library(psych)
+library(rmdformats)
 ```
 
 
@@ -197,8 +202,8 @@ covariate: Gender + Parity + Weight
 ```{r ModelGenParWt}
 ModelGenParWt <- lm(headc ~ weight + gender + parity, data = Data01)
 summary(ModelGenParWt)
-tidy(ModelGenParWt, conf.int = T)
-
+ModelGenParWt01 <- tidy(ModelGenParWt)
+ModelGenParWt01
 ```
 
 ### Model 22
@@ -207,9 +212,10 @@ outcome: head circumference
 covariate: Gender + Parity + Length
 
 ```{r ModelGenParLt}
-ModelGenParLt <- lm(headc ~ weight + gender + parity, data = Data01)
+ModelGenParLt <- lm(headc ~ length + gender + parity, data = Data01)
 summary(ModelGenParLt)
-tidy(ModelGenParLt, conf.int = T)
+ModelGenParLt01 <- tidy(ModelGenParLt)
+ModelGenParLt
 ```
 
 ### Model 23
@@ -217,9 +223,191 @@ tidy(ModelGenParLt, conf.int = T)
 outcome: head circumference
 covariate: Gender + Parity + Weight + Length
 
-```{r ModelGenParWLt}
+```{r ModelGenParWtLt}
 ModelGenParWtLt <- lm(headc ~ weight + length + gender + parity, data = Data01)
 summary(ModelGenParWtLt)
-tidy(ModelGenParWtLt, conf.int = T)
+ModelGenParWtLt01 <-tidy(ModelGenParWtLt)
+ModelGenParWtLt01
 ```
 
+### Model Comparison
+
+for Weight
+
+```{r}
+((ModelGenParWtLt01 [2,2] - ModelGenParWt01 [2,2])/ ModelGenParWt01 [2,2])*100
+```
+
+for Length
+
+```{r}
+((ModelGenParWtLt01 [2,2] - ModelGenParLt01 [2,2])/ ModelGenParLt01 [2,2])*100
+```
+
+
+Since Length have bigger difference, weight will be removed from the model. In addition to that, adjusted R<sup>2</sup> for model with length is higher than model with weight variable.
+
+## Interaction
+
+Model to check for interaction is
+
+Outcome: Head Circumference
+Covariate: length, gender and parity
+
+### Interaction term - Length and Gender
+
+Outcome: Head Circumference
+Covariate: length, gender, parity, length*gender
+
+```{r ModelGenParLt_LtGen}
+ModelGenParLt_LtGen <- lm(headc ~ length + gender + parity + length:gender, data = Data01)
+summary(ModelGenParLt_LtGen)
+tidy(ModelGenParLt)
+tidy(ModelGenParLt_LtGen)
+anova(ModelGenParLt_LtGen, ModelGenParLt)
+```
+
+interaction term between length and gender is not significant.
+
+### Interaction term - Length and Parity
+
+Outcome: Head Circumference
+Covariate: length, gender, parity, length*parity
+
+```{r ModelGenParLt_LtPar}
+ModelGenParLt_LtPar <- lm(headc ~ length + gender + parity + length:parity, data = Data01)
+summary(ModelGenParLt_LtPar)
+tidy(ModelGenParLt)
+tidy(ModelGenParLt_LtPar)
+anova(ModelGenParLt_LtPar, ModelGenParLt)
+```
+
+there is interaction between variable length and parity
+
+### Interaction term - Gender and Parity
+
+Outcome: Head Circumference
+Covariate: length, gender, parity, gender*parity
+
+```{r ModelGenParLt_GenPar}
+ModelGenParLt_GenPar <- lm(headc ~ length + gender + parity + gender:parity, data = Data01)
+summary(ModelGenParLt_GenPar)
+tidy(ModelGenParLt)
+tidy(ModelGenParLt_GenPar)
+anova(ModelGenParLt_GenPar, ModelGenParLt)
+```
+
+interaction term between gender and parity is not significant.
+
+## Model Assesment
+
+Preliminary Final Model
+Outcome: Head Circumference
+Covariate: length, gender, parity, length*parity
+
+```{r Prelim Final Model}
+
+ModelGenParLt_LtPar <- lm(headc ~ length + gender + parity + length:parity, data = Data01)
+
+```
+
+### Predictor Value
+
+```{r}
+Pred.PrelimFinalModel <- augment(ModelGenParLt_LtPar)
+kable(head(Pred.PrelimFinalModel))
+```
+
+### Normality Test for Residual
+
+Histogram for Residual to look for distribution shape.
+
+```{r Histogram Residual}
+ggplot(data = Pred.PrelimFinalModel, aes(x=.resid)) + geom_histogram()
+```
+
+Scatter plot between predicted and residual values.
+
+```{r Scatter Plot Predicted vs Residual}
+ggplot(data = Pred.PrelimFinalModel, aes(x=.fitted, y=.resid)) + geom_point() + geom_hline (yintercept = 0)
+```
+
+Thus, these two assumption for linear regression is fulfilled
+1. for each set of $X$<sub>i</sub> values, there is a subpopulation of Y values which are normally distributed.
+2. the variance of the sub-population of Y are all equal
+
+# Prediction with New Data
+
+## Create New Dataset
+
+create new data 
+
+```{r New Data}
+new_data <- expand.grid(length = c(45, 50, 55, 60, 65),
+                        gender = c('Male', 'Female'),
+                        parity = c('Singleton', 'One sibling','2 siblings', '3 or more siblings'))
+head(new_data)
+```
+
+## Calculate Predicted Values with New Dataset
+
+```{r Preidcted with New Data}
+DataSetPred.NewDt <- augment(ModelGenParLt_LtPar, newdata = new_data)
+DataSetPred.NewDt
+```
+
+# Explore Influential
+
+Measure influential in the model
+1. cooks distanc: value above 1 or above 4/n
+2. standardized residual: values above 2 or lower than -2
+
+```{r}
+(2*4 +2)/550
+```
+
+
+3. leverage above (2k +2)/n = 0.0182
+
+
+```{r Dataset Influential}
+influen.obs <- Pred.PrelimFinalModel %>% filter(.std.resid > 2 | .std.resid < -2 | .hat > 0.0182)
+influen.obs
+```
+
+
+## Dataset with Standardized Residual between 2 and -2
+
+```{r Dataset without Influential}
+NonInfluenObs <- Pred.PrelimFinalModel %>% filter(.std.resid < 2 | .std.resid > -2 | .hat < 0.0182)
+NonInfluenObs
+```
+
+the model is re-run using dataset without influential
+
+```{r Model with Dataset without Influential}
+FinalModelNoInfluential <- lm(ModelGenParLt_LtPar, data = NonInfluenObs)
+```
+
+
+## Diagnostic Plot for Model without influential
+
+```{r}
+plot(FinalModelNoInfluential)
+```
+
+# Final Model
+
+Model
+$y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3 + \beta_4X_1X_2$
+
+$X_1$ - length
+$X_2$ - gehder
+$X_3$ - parity
+
+```{r Final Model}
+tidy(ModelGenParLt_LtPar, conf.int = T)
+```
+
+
+head circumference = 18.45 + 0.36 (length) - 0.52 (female = 1) + 4.29 (One sibling = 1) + 1.71 (2 siblings = 1) + 8.48 (3 or more siblings = 1) - 0.07 (length:one sibling) - 0.02 (length:2sibling) - 0.15 (length:3 or more siblings)
