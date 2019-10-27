@@ -2,9 +2,11 @@
 title: "Linear Regression Modelling Assignment"
 author: "Mohd Azmi"
 date: "27/10/2019"
-output: 
+output:
   rmdformats::readthedown:
     highlight: kate
+resource_files:
+- AzmiLRAssignment.html
 ---
   
 # Pre-amble
