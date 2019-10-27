@@ -13,7 +13,7 @@ output:
   
 A team of researchers wanted to find relationship between weight and head circumference among newborn. The researchers also wanted to know is there any other factors that can be used to predict the head circumference.
 
-In this dataset, 550 terms babies were sampled from a population. their weight, lenght and head circumference were recorded at one month of age. The babies also had their gender and parity recorded. (Parity is their birth order in the family). Mother's education level were also recorded.
+In this dataset, 550 terms babies were sampled from a population. their weight, length and head circumference were recorded at one month of age. The babies also had their gender and parity recorded. (Parity is their birth order in the family). Mother's education level were also recorded.
 
 *Dataset Source: [Medical Statistics: A Guide to Data Analysis and Critical Appraisal](https://www.wiley.com/en-us/Medical+Statistics%3A+A+Guide+to+Data+Analysis+and+Critical+Appraisal-p-9780470755204)*
 
@@ -101,7 +101,7 @@ The weight distribution look normally distributed
   
 ### Correlation
 
-Correlation between numerical data can be calculated using correlation matrix and visuallized using correllogram.
+Correlation between numerical data can be calculated using correlation matrix and visualized using correlogram.
 
 - Correlation Matrix and Correlogram
 
@@ -114,7 +114,7 @@ corrplot(CorData02, method = "pie")
 
 Based on the correlation Matrix, we can conclude that
 
-- weight and lenght had high correlation, with r = 0.71
+- weight and length had high correlation, with r = 0.71
 - other combination had moderate correlation, with 0.3 < r < 0.7
 
 
@@ -137,7 +137,7 @@ summary(ModelWeight)
 kable(tidy(ModelWeight, conf.int = T))
 ```
 
-The weight is significantly associated with head circumference, in which for each incrase in 1 kg of weight, the head circumference increase by 1.41 cm.
+The weight is significantly associated with head circumference, in which for each increase in 1 kg of weight, the head circumference increase by 1.41 cm.
 
 ### ModelLength
 
@@ -152,7 +152,7 @@ summary(ModelLength)
 kable(tidy(ModelLength, conf.int = T))
 ```
 
-The length is significanttly associated with head circumference, in which for each increase in 1cm of lenght, the head cicrcumference increase by 0.34 cm.
+The length is significantly associated with head circumference, in which for each increase in 1cm of length, the head circumference increase by 0.34 cm.
 
 
 ### ModelGender
@@ -278,7 +278,7 @@ For model comparison, between ModelWtLtGenEduPar and ModelWtLtGenPar, there is n
 
 Thus, to choose either ModelWeightLength or ModelWtLtGenPar, adjusted R<sup>2</sup> will be use as guidance.  
 
-For ModelWeightLength, the adjusted R<sup>2</sup> is 0.4339, while ModelWtLtGenPar, adjusted R<sup>2</sup>is 0.4452. thus ModelWtLtGenPar is choosed.  
+For ModelWeightLength, the adjusted R<sup>2</sup> is 0.4339, while ModelWtLtGenPar, adjusted R<sup>2</sup>is 0.4452. thus ModelWtLtGenPar is chose.  
 
 ## Handling Confounding
 
@@ -402,7 +402,7 @@ Both models were compared.
 anova(ModelGenParLt_LtPar, ModelGenParLt)
 ```
 
-interaction term between length and parity is not significan
+interaction term between length and parity is not significant
 
 ### Interaction term - Gender and Parity
 
@@ -426,7 +426,7 @@ anova(ModelGenParLt_GenPar, ModelGenParLt)
 
 interaction term between gender and parity is not significant.
 
-## Model Assesment
+## Model Assessment
 
 Preliminary Final Model need to be assessed by checking the model assumption. 
 
@@ -476,11 +476,11 @@ ggplot(data = Pred.PrelimFinalModel, aes(x=.fitted, y=.resid)) +
   geom_hline (yintercept = 2, linetype=2, color="blue") +
   geom_hline (yintercept = -2, linetype=2, color="blue")
 ```
-Scatterplot seem linear and constant
+Scatter plot seem linear and constant
 
 Thus, these two assumption for linear regression is fulfilled
 
-1. for each set of $X$<sub>i</sub> values, there is a subpopulation of Y values which are normally distributed.
+1. for each set of $X$<sub>i</sub> values, there is a sub-population of Y values which are normally distributed.
 2. the variance of the sub-population of Y are all equal
 
 
@@ -529,7 +529,7 @@ Measure influential in the model
 
 ## Select Influence
 
-Sample with influnce is selected using filter function
+Sample with influence is selected using filter function
 ```{r Dataset Influence}
 influen.obs <- Pred.PrelimFinalModel %>% filter(.std.resid > 2 | .std.resid < -2 | .hat > 0.0182)
 summary(influen.obs)
@@ -538,7 +538,7 @@ kable(head(influen.obs))
 
 ## Select Dataset without Influence Samples
 
-Sample without influence is seleected using filter function
+Sample without influence is selected using filter function
 ```{r Dataset without Influence}
 NonInfluenObs <- Pred.PrelimFinalModel %>% filter(.std.resid < 2 & .std.resid > -2 & .hat < 0.0182)
 summary(NonInfluenObs)
@@ -580,7 +580,7 @@ ggplot(data = Pred.FinalModelOriginal, aes(x=.resid)) +
 
 Residual Histogram look normally distributed
 
-Scatterplot between Predicted and Residual value
+Scatter plot between Predicted and Residual value
 
 ```{r Scatterplot Final Model Original Dataset}
 ggplot(data = Pred.FinalModelOriginal, aes(x=.fitted, y=.resid)) +
@@ -589,11 +589,11 @@ ggplot(data = Pred.FinalModelOriginal, aes(x=.fitted, y=.resid)) +
   geom_hline (yintercept = 2, linetype=2, color="blue") +
   geom_hline (yintercept = -2, linetype=2, color="blue")
 ```
-Scatterplot seem linear and constant  
+Scatter plot seem linear and constant  
   
 Thus, these two assumption for linear regression is fulfilled
 
-1. for each set of $X$<sub>i</sub> values, there is a subpopulation of Y values which are normally distributed.
+1. for each set of $X$<sub>i</sub> values, there is a sub-population of Y values which are normally distributed.
 2. the variance of the sub-population of Y are all equal
 
 ### Final Model with Influence Removed
@@ -618,7 +618,7 @@ ggplot(data = Pred.FinalModelNoInfluence, aes(x=.resid)) +
 ```
 Residual Histogram look normally distributed
 
-Scatterplot between Predicted and Residual value
+Scatter plot between Predicted and Residual value
 
 ```{r Scatterplot Final Model Withour Influence}
 ggplot(data = Pred.FinalModelNoInfluence, aes(x=.fitted, y=.resid)) +
@@ -627,14 +627,14 @@ ggplot(data = Pred.FinalModelNoInfluence, aes(x=.fitted, y=.resid)) +
   geom_hline (yintercept = 2, linetype=2, color="blue") +
   geom_hline (yintercept = -2, linetype=2, color="blue")
 ```
-Scatterplot seem linear and constant  
+Scatter plot seem linear and constant  
   
 Thus, these two assumption for linear regression is fulfilled
 
-1. for each set of $X$<sub>i</sub> values, there is a subpopulation of Y values which are normally distributed.
+1. for each set of $X$<sub>i</sub> values, there is a sub-population of Y values which are normally distributed.
 2. the variance of the sub-population of Y are all equal
 
-Qualitatively, diagnostic plot for Final Model withour Influence look *leaner*, but otherwise does not seem different much.
+Qualitatively, diagnostic plot for Final Model without Influence look *leaner*, but otherwise does not seem different much.
 
 # Final Model
 
