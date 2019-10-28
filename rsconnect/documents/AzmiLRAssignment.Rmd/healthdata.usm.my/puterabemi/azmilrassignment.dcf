@@ -5,9 +5,9 @@ account: puterabemi
 server: healthdata.usm.my
 hostUrl: https://healthdata.usm.my:3939/__api__
 appId: 41
-bundleId: 68
+bundleId: 74
 url: https://healthdata.usm.my:3939/content/41/
-when: 1572189340.2985
+when: 1572239958.75169
 asMultiple: FALSE
 asStatic: FALSE
-additionalFiles: AzmiLRAssignment.html
+ignoredFiles: weights.sav|AzmiLRAssignment.html
