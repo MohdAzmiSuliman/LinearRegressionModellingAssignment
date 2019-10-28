@@ -633,7 +633,7 @@ Residual Histogram look normally distributed
 
 Scatter plot between Predicted and Residual value
 
-```{r Scatterplot Final Model Withour Influence}
+```{r Scatterplot Final Model Without Influence}
 ggplot(data = Pred.FinalModelNoInfluence, aes(x=.fitted, y=.resid)) +
   geom_point() +
   geom_hline (yintercept = 0) +
@@ -647,7 +647,9 @@ Thus, these two assumption for linear regression is fulfilled
 1. for each set of $X$<sub>i</sub> values, there is a sub-population of $Y$ values which are normally distributed.
 2. the variance of the sub-population of $Y$ are all equal
 
-Qualitatively, diagnostic plot for Final Model without Influence look *leaner*, but otherwise does not seem different much.
+Qualitatively, diagnostic plot for Final Model without Influence look *leaner*. Otherwise adjusted R^2^ for Final Model without Influence was higher.
+
+Thus the final model will based on new model without influence samples.
 
 # Final Model & Interpretation
 
@@ -662,24 +664,24 @@ $y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3$
 - $X_3$ - parity
 
 ```{r Final Model}
-summary(ModelFinal)
-kable(tidy(ModelFinal, conf.int = T))
+summary(FinalModelNoInfluential)
+kable(tidy(FinalModelNoInfluential, conf.int = T))
 ```
 
 
-head circumference = 21.01 + 0.31(length) - 0.53(female = 1) + 0.27(One sibling = 1) + 0.38(2 siblings = 1) + 0.17(3 or more siblings = 1)
+head circumference = 19.96 + 0.33(length) - 0.55(female = 1) + 0.26(One sibling = 1) + 0.44(2 siblings = 1) + 0.26(3 or more siblings = 1)
 
 ## Model Interpretation
 
-Multiple Linear Regression Analysis show that length, gender and parity had singificant linear relationship to head circumference. The model explains 39.9% of variation of head circumference in the study sample.  
+Multiple Linear Regression Analysis show that length, gender and parity had singificant linear relationship to head circumference. The model explains 48.8% of variation of head circumference in the study sample.  
 
 The relationship can be explained as below
 
-- those with 1 cm length increment have increment of 0.31cm head circumference when adjusted to gender and parity
-- When comparing female against male, female baby will have 0.53cm lower head circumference, when adjusted to length and parity
-- when comparing one sibling to singleton baby, one sibling will have 0.28cm higher head circumference, when adjusted to length and gender
-- when comparing two sibling to singleton baby, two sibling will have 0.38cm higher head circumference, when adjusted to length and gender
-- when comparing 3 or more sibling to singleton baby, 3 or more sibling will have 0.17cm higher head circumference, when adjusted to length and gender
+- those with 1 cm length increment have increment of 0.33cm (95% CI = 0.29, 0.37) head circumference when adjusted to gender and parity
+- When comparing female against male, female baby will have 0.55cm (95% CI = 0.38, 0.72) lower head circumference, when adjusted to length and parity
+- when comparing one sibling to singleton baby, one sibling will have 0.26cm (95% CI = 0.07, 0.46)  higher head circumference, when adjusted to length and gender
+- when comparing two sibling to singleton baby, two sibling will have 0.44cm (95% CI = 0.22, 0.66) higher head circumference, when adjusted to length and gender
+- when comparing 3 or more sibling to singleton baby, 3 or more sibling will have 0.17cm (95% CI = -0.17, 0.69) higher head circumference, when adjusted to length and gender
 
 Model assumptions were met. There were no interaction nor multicollinearity between independent variables.  
 
