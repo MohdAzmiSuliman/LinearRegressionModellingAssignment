@@ -32,6 +32,7 @@ library(tidyr)
 library(psych)
 library(rmdformats)
 library(xaringan)
+library(car)
 ```
 
 
@@ -50,7 +51,7 @@ In the first step, data exploration was done to get the overview of the data.
 Descriptive analysis was done to the dataset to get the overview of the data, including statistic for each variables.
 
 ```{r Descriptive Exploratory}
-kable(summary(Data01[, 2:6]))
+kable(summary(Data01[, 5:6]))
 kable(describe(Data01))
 ```
 
@@ -297,6 +298,7 @@ ggplot(Data01, aes(weight, length)) +
   stat_smooth(method = 'lm', col = 'green')
 ```
 
+
 Thus need to decide whether to include either one or both variables in the model.
 
 - ModelGenParWt
@@ -361,6 +363,16 @@ ModelGenParLt01 <- tidy(ModelGenParLt)
 
 Since Length have bigger difference, weight will be removed from the model. In addition to that, adjusted R<sup>2</sup> for model with length is higher than model with weight variable.
 
+
+### Alternative for multicollinearity
+
+To find multicollinearity between variables, VIF can be calculated.
+
+```{r VIF}
+kable(vif(lm(headc ~ weight + length + gender + parity, data = Data01)))
+```
+
+Based on this result, it's seem that while weight and lenght has higher VIF value compared to other variables, but the VIF value for both variables were still less than 10.
 
 ## Interaction
 
