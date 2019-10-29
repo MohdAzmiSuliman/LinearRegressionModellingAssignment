@@ -31,6 +31,7 @@ library(broom)
 library(tidyr)
 library(psych)
 library(rmdformats)
+library(xaringan)
 ```
 
 
@@ -185,7 +186,7 @@ summary(ModelEducation)
 kable(tidy(ModelEducation, conf.int = T))
 ```
 
-There was significant association between mother's education level and head circumference.
+There was no significant association between mother's education level and head circumference.
 
 
 ### ModelParity
@@ -201,7 +202,7 @@ summary(ModelParity)
 kable(tidy(ModelParity, conf.int = T))
 ```
 
-There is significant association between the newborn parity and head circumference.
+There was significant association between the newborn parity and head circumference.
 
 ## Univariable Summary
 
@@ -212,10 +213,10 @@ SLRResult <- matrix(c("Weight", 1.51, "(1.26, 1.56)", "< 0.001", 0.39,
                       "Length", 0.34, "(0.30, 0.38)", "< 0.001", 0.36,
                       "GenderFemale", -0.90, "(-1.12, -0.69)", "<0.001", 0.11,
                       "Mother's Education Level - Secondary", 0.09, "(-0.24, 0.42)", 0.592, "< 0.01",
-                      "Mother's Education Level - Tertiary", 0.02, "(-0.23, 0.28", 0.848, "< 0.01",
+                      "Mother's Education Level - Tertiary", 0.02, "(-0.23, 0.28", 0.848, "",
                       "Parity - One Sibling", 0.30, "(0.03, 0.58)", 0.032, 0.02,
-                      "Parity - Two Siblings", 0.42, "(0.10, 0.73", 0.010, 0.02,
-                      "Parity - Three Siblings", 0.38, "(-0.01, 0.77)", 0.059, 0.02),  ncol = 5, byrow = T)
+                      "Parity - Two Siblings", 0.42, "(0.10, 0.73", 0.010, "",
+                      "Parity - Three Siblings", 0.38, "(-0.01, 0.77)", 0.059, ""),  ncol = 5, byrow = T)
 colnames(SLRResult) <- c("Variables", "beta", "(95% CI)", "p-value", "R^2^")
 kable(SLRResult)
 ```
@@ -266,7 +267,7 @@ ModelWtLtGenPar was done using these variables
 
 ```{r LM ModelWtLtGenPar}
 ModelWtLtGenPar <- lm(headc ~ weight + length + gender + parity, data = Data01)
-summary(ModelWtLtGenEduPar)
+summary(ModelWtLtGenPar)
 kable(tidy(ModelWtLtGenPar, conf.int = T))
 ```
 
@@ -312,8 +313,7 @@ ModelGenParWt was done using these variables
 ```{r ModelGenParWt}
 ModelGenParWt <- lm(headc ~ weight + gender + parity, data = Data01)
 summary(ModelGenParWt)
-ModelGenParWt01 <- tidy(ModelGenParWt)
-kable(ModelGenParWt01)
+kable(tidy(ModelGenParWt))
 ```
 
 ### ModelGenParLt
@@ -326,8 +326,7 @@ ModelGenParLt was done using these variables
 ```{r ModelGenParLt}
 ModelGenParLt <- lm(headc ~ length + gender + parity, data = Data01)
 summary(ModelGenParLt)
-ModelGenParLt01 <- tidy(ModelGenParLt)
-kable(ModelGenParLt01)
+kable(tidy(ModelGenParLt))
 ```
 
 ### ModelGenParWtLT
@@ -340,21 +339,23 @@ ModelGenParWtLt was done using these variables
 ```{r ModelGenParWtLt}
 ModelGenParWtLt <- lm(headc ~ weight + length + gender + parity, data = Data01)
 summary(ModelGenParWtLt)
-ModelGenParWtLt01 <-tidy(ModelGenParWtLt)
-kable(ModelGenParWtLt01)
+kable(tidy(ModelGenParWtLt))
 ```
 
 ### Confounder Model Comparison
 
 for Weight
 
-```{r}
+```{r Collinearity Weight Comparison}
+ModelGenParWt01 <- tidy(ModelGenParWt)
+ModelGenParWtLt01 <-tidy(ModelGenParWtLt)
 ((ModelGenParWtLt01 [2,2] - ModelGenParWt01 [2,2])/ ModelGenParWt01 [2,2])*100
 ```
 
 for Length
 
-```{r}
+```{r Collinearity Length Comparison}
+ModelGenParLt01 <- tidy(ModelGenParLt)
 ((ModelGenParWtLt01 [2,2] - ModelGenParLt01 [2,2])/ ModelGenParLt01 [2,2])*100
 ```
 
@@ -378,11 +379,10 @@ ModelGenParLt_LtGen is used to examine interaction term between **length** and *
 ```{r ModelGenParLt_LtGen}
 ModelGenParLt_LtGen <- lm(headc ~ length + gender + parity + length:gender, data = Data01)
 summary(ModelGenParLt_LtGen)
-kable(tidy(ModelGenParLt))
 kable(tidy(ModelGenParLt_LtGen))
 ```
 
-Both models were compared.
+The interaction model was compared with model without interaction term.
 
 ```{r ANOVA Interaction Lenght Gender}
 anova(ModelGenParLt_LtGen, ModelGenParLt)
@@ -400,11 +400,10 @@ ModelGenParLt_LtPar is used to examine interaction term between **length** and *
 ```{r ModelGenParLt_LtPar}
 ModelGenParLt_LtPar <- lm(headc ~ length + gender + parity + length:parity, data = Data01)
 summary(ModelGenParLt_LtPar)
-kable(tidy(ModelGenParLt))
 kable(tidy(ModelGenParLt_LtPar))
 ```
 
-Both models were compared.
+The interaction model was compared with model without interaction term.
 
 ```{r ANOVA Interaction Lenght Parity}
 anova(ModelGenParLt_LtPar, ModelGenParLt)
@@ -422,11 +421,10 @@ ModelGenParLt_GenPar is used to examine interaction term between **parity** and 
 ```{r ModelGenParLt_GenPar}
 ModelGenParLt_GenPar <- lm(headc ~ length + gender + parity + gender:parity, data = Data01)
 summary(ModelGenParLt_GenPar)
-kable(tidy(ModelGenParLt))
 kable(tidy(ModelGenParLt_GenPar))
 ```
 
-Both models were compared.
+The interaction model was compared with model without interaction term.
 
 ```{r ANOVA Interaction Parity Gender}
 anova(ModelGenParLt_GenPar, ModelGenParLt)
@@ -454,7 +452,7 @@ kable(tidy(ModelPrelim))
 
 ### Prediction Value
 
-Using Preliminary Final Model, prediction value was first calculated, by predicting the head circumference using the observed data from predictors variables (length, gender, parity and interaction term length*parity)
+Using Preliminary Final Model, prediction value was first calculated, by predicting the head circumference using the observed data from predictors variables (length, gender, parity)
 
 ```{r Prediction Preliminary Final Model}
 Pred.PrelimFinalModel <- augment(ModelPrelim)
@@ -488,37 +486,9 @@ Scatter plot seem linear and constant
 
 Thus, these two assumption for linear regression is fulfilled
 
-1. for each set of $X$<sub>i</sub> values, there is a sub-population of Y values which are normally distributed.
+1. for each set of X<sub>i</sub> values, there is a sub-population of Y values which are normally distributed.
 2. the variance of the sub-population of Y are all equal
 
-
-# Prediction
-
-## Prediction with New Dataset
-
-### Create New Dataset
-
-new data was created using these parameter
-
-- length - 45cm, 50cm, 55cm, 60cm, 65cm
-- gender - both male and female
-- parity - singleton, one sibling, 2 siblings and 3 or more siblings
-
-
-```{r New Data}
-DS_cons <- expand.grid(length = c(45, 50, 55, 60, 65),
-                        gender = c('Male', 'Female'),
-                        parity = c('Singleton', 'One sibling','2 siblings', '3 or more siblings'))
-kable(head(DS_cons))
-```
-
-### Calculate Predicted Values with New Dataset
-
-```{r Predicted with New Data}
-DataSetPred.NewDS <- augment(ModelPrelim, newdata = DS_cons)
-kable(head(DataSetPred.NewDS))
-kable(tail(DataSetPred.NewDS))
-```
 
 # Outlier and Influence
 
@@ -555,7 +525,7 @@ summary(NonInfluenObs)
 kable(head(NonInfluenObs))
 ```
 
-When innfluece samples were removed, there were 481 samples.  
+When influence samples were removed, there were 481 samples.  
 
   
 the model is re-run using dataset without influence
@@ -606,8 +576,8 @@ Scatter plot seem linear and constant
   
 Thus, these two assumption for linear regression is fulfilled
 
-1. for each set of $X$<sub>i</sub> values, there is a sub-population of Y values which are normally distributed.
-2. the variance of the sub-population of Y are all equal
+1. for each set of $X$<sub>i</sub> values, there is a sub-population of $Y$ values which are normally distributed.
+2. the variance of the sub-population of $Y$ are all equal
 
 ### Final Model with Influence Removed
 
@@ -657,7 +627,7 @@ Thus the final model will based on new model without influence samples.
 
 Model  
 
-$y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3$
+$Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3$
 
 - $X_1$ - length
 - $X_2$ - gender
@@ -686,5 +656,32 @@ The relationship can be explained as below
 Model assumptions were met. There were no interaction nor multicollinearity between independent variables.  
 
 Low coefficient of determination, R^2^ is most likely due to underfitting. There might be unexplained variation, which can be exlained by other variables outside of the scope of this study. But for this research purpose, with available variables, the model stated above is the best model available.
+
+# Prediction
+
+## Prediction with New Dataset
+
+### Create New Dataset
+
+new data was created using these parameter
+
+- length - mean newborn's length
+- gender - both male and female
+- parity - singleton, one sibling, 2 siblings and 3 or more siblings
+
+
+```{r New Data}
+DS_cons <- expand.grid(length = mean(NonInfluenObs$length),
+                        gender = c('Male', 'Female'),
+                        parity = c('Singleton', 'One sibling','2 siblings', '3 or more siblings'))
+kable(DS_cons)
+```
+
+### Calculate Predicted Values with New Dataset
+
+```{r Predicted with New Data}
+DataSetPred.NewDS <- augment(FinalModelNoInfluential, newdata = DS_cons)
+kable(DataSetPred.NewDS)
+```
 
 
