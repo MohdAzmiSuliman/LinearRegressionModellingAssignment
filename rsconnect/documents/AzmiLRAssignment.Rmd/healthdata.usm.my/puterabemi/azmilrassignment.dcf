@@ -5,8 +5,8 @@ account: puterabemi
 server: healthdata.usm.my
 hostUrl: https://healthdata.usm.my:3939/__api__
 appId: 41
-bundleId: 81
+bundleId: 82
 url: https://healthdata.usm.my:3939/content/41/
-when: 1572265870.84716
+when: 1572397605.81792
 asMultiple: FALSE
 asStatic: FALSE
