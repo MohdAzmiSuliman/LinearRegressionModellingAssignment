@@ -1,0 +1,12 @@
+name: azmilrmassignment
+title: AzmiLRMAssignment
+username: puterabemi
+account: puterabemi
+server: healthdata.usm.my
+hostUrl: https://healthdata.usm.my:3939/__api__
+appId: 51
+bundleId: 101
+url: https://healthdata.usm.my:3939/content/51/
+when: 1572492771.8234
+asMultiple: FALSE
+asStatic: TRUE
