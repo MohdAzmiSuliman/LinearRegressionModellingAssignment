@@ -31,7 +31,6 @@ library(broom)
 library(tidyr)
 library(psych)
 library(rmdformats)
-library(xaringan)
 library(car)
 ```
 
@@ -677,23 +676,25 @@ Low coefficient of determination, R^2^ is most likely due to underfitting. There
 
 new data was created using these parameter
 
-- length - mean newborn's length
+- length - 45cm, mean newborn's length, 65cm
 - gender - both male and female
 - parity - singleton, one sibling, 2 siblings and 3 or more siblings
 
 
 ```{r New Data}
-DS_cons <- expand.grid(length = mean(NonInfluenObs$length),
+DS_cons <- expand.grid(length = c(45, mean(NonInfluenObs$length), 65),
                         gender = c('Male', 'Female'),
                         parity = c('Singleton', 'One sibling','2 siblings', '3 or more siblings'))
-kable(DS_cons)
+kable(head(DS_cons))
+kable(tail(DS_cons))
 ```
 
 ### Calculate Predicted Values with New Dataset
 
 ```{r Predicted with New Data}
 DataSetPred.NewDS <- augment(FinalModelNoInfluential, newdata = DS_cons)
-kable(DataSetPred.NewDS)
+kable(head(DataSetPred.NewDS))
+kable(tail(DataSetPred.NewDS))
 ```
 
 
