@@ -2,7 +2,9 @@
 title: "Linear Regression Modelling Assignment"
 author: "Mohd Azmi"
 date: "31/10/2019"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
   
@@ -29,6 +31,7 @@ library(tidyr)
 library(psych)
 library(rmdformats)
 library(car)
+library(DT)
 ```
 
 
@@ -36,6 +39,7 @@ library(car)
 
 ```{r Loading Dataset, message=FALSE}
 Data01 <- read.spss("weights.sav", use.value.label=T, to.data.frame=T)
+datatable(Data01)
 ```
 
 # Descriptive Analysis and Data Exploration

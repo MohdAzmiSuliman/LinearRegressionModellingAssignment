@@ -32,6 +32,7 @@ library(tidyr)
 library(psych)
 library(rmdformats)
 library(car)
+library(DT)
 ```
 
 
@@ -39,6 +40,7 @@ library(car)
 
 ```{r Loading Dataset, message=FALSE}
 Data01 <- read.spss("weights.sav", use.value.label=T, to.data.frame=T)
+datatable(Data01)
 ```
 
 # Descriptive Analysis and Data Exploration
